@@ -2,17 +2,50 @@ body {
     font-family: 'Roboto', sans-serif;
     background-color: #eef9bf;
 }
-.gameName {
+@media (max-width:350px) {
+    .mesa {
+        flex-direction: column;
+    }
+    .gameName{
+        font-size:36px;
+    }
+}
+.nomeJogo {
     color:#75B79E;
-    font-size: 36px;
+    /* tamanho de fonte mobile */
+    font-size: 52px;
     text-align:center;
 }
-.cards {
-    position: absolute;
+.mesa{
+    display:flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+}
+.cartasModelo {
+    position: relative;
     width: 117px;
     height: 146px;
     background: #A7E9AF;
     border: 1px solid #99CEA8;
     box-sizing: border-box;
     border-radius: 5px;
+    margin: 20px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center; 
+    transition: cartasModelo 5000ms;
+    transition: cartasImagens;
+}
+.cartasImagens {
+    height: 100px;
+    width: 100px;
+    position: absolute;
+}
+.cartasModelo:active {
+    transform: rotateY(180deg);
+} 
+.cartasImagens:active {
+    display: none;
 }
