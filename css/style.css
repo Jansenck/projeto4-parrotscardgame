@@ -31,12 +31,10 @@ body {
     border: 1px solid #99CEA8;
     box-sizing: border-box;
     border-radius: 5px;
-    margin: 20px 20px;
-    display: flex;
-    align-items: center;
-    justify-content: center; 
-    transition: cartasModelo 5000ms;
-    transition: cartasImagens;
+    margin: 25px 25px;
+    transform: scale(1);
+    transform-style: preserve-3d;
+    transition: transform .5s;
 }
 .cartasImagens {
     height: 100px;
@@ -44,8 +42,9 @@ body {
     position: absolute;
 }
 .cartasModelo:active {
+    transform: scale(0.97);
+    transition: transform .2s;
+}
+.dadoCarta .virar {
     transform: rotateY(180deg);
-} 
-.cartasImagens:active {
-    display: none;
 }
