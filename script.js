@@ -1,98 +1,180 @@
-let minhasCartas=[];
-let cartasEmJogo = ['carta1','carta2','carta3','carta4','carta5','carta6','carta7',];
-
-
-// Layout da página: Desktop e Mobile Ok
-// Prompt: Quantas cartas terá o jogo? Ok
-
-// Armazenar quantidade de cartas escolhida
-// Adicionar quantidade de cartas na mesa
-// Adicionar cartas em pares 
-// Rotacionar cartas e aparecer imagem (onclick)
-// Cartas iguais permanecem viradas e diferentes desviram
-// Identificação de cartas iguais
-// Armazenar cartas igual e subtrai-las do jogo
-// Todas as cartas deram match = fim de jogo
-
-
-/*window.onload evita que as funções iniciem antes da página carregar*/
-
 window.onload = () => {
 
-    let minhasCartas = [];
     let condicaoCartas = false;
+    let minhasCartas = []
 
-    function escolherNumeroCartas(){
-        let numeroCartas = parseInt(prompt("Escolhar e digite um número par de cartas entre 4 e 14"));
-    //Condições para o número de cartas
-        while((numeroCartas % 2 !== 0) || (numeroCartas < 4) || (numeroCartas > 14)){
-            numeroCartas = parseInt(prompt("Escolha um número par de cartas entre 4 e 14."));
+    function numeroCartas() {
+
+        while (condicaoCartas == false) {
+
+            let numeroCartas = prompt("Insira um número par de cartas entre 4 e 14: ")
+
+            if (numeroCartas >= 4 && numeroCartas <= 14 && numeroCartas % 2 === 0) {
+                iniciarJogo(numeroCartas)
+                condicaoCartas = true;
+            }
         }
     }
-    let cartasFinal;
 
-    function iniciarJogo(numeroEscolhido) {
+    let contaCartas;
 
-        let par = numeroEscolhido / 2;
-        // 
-        let identificaCartas = ["carta1", "carta2", "carta3", "carta4", "carta5", "carta6", "carta7"];
+
+    function iniciarJogo(numeroCartas) {
+
+        let parCartas = numeroCartas / 2
         
-        for (let index = 0; index < parseFloat; index++) {
-            
-            // Como temos 7 tipos de cartas diferentes, temos que dar push em 2 cartas de cada
-            minhasCartas.push(`
-            <div class="dadosCarta" data-carta="${identificador[i]}">
-            <img class="front-face" src="img/${identificador[i]}.png"/>
-            <img class="back-face" src="img/frente.png"/> 
-            </div>  `)
-            
-            minhasCartas.push(`
-            <div class="dadosCarta" data-carta="${identificador[i]}">
-            <img class="front-face" src="img/${identificador[i]}.png"/>
-            <img class="back-face" src="img/frente.png"/> 
-            </div>  `)
-            
-            console.log("Entrou cartas")
-        }
-        // Dar as cartas
-        let mesa = document.querySelector("section")
+        let identificador = ['carta1', 'carta2', 'carta3', 'carta4', 'carta5', 'carta6', 'carta7']
 
-        for (let index=0; index < numeroEscolhido; index++) {
-            mesa.innerHTML += minhasCartas[i];
+
+        contaCartas = numeroCartas
+
+
+        for (let index = 0; index < parCartas; index++) {
+
+
+            minhasCartas.push(`
+            <div class="cartasModelo" data-carta="${identificador[index]}">
+              <img class="front-face" src="images/${identificador[index]}.png"/>
+              <img class="back-face" src="images/front.png"/> 
+            </div>  `)
+
+            minhasCartas.push(`
+            <div class="cartasModelo" data-carta="${identificador[index]}">
+              <img class="front-face" src="images/${identificador[index]}.png"/>
+              <img class="back-face" src="images/front.png"/>
+            </div>  `)
         }
 
-        // Chamar a função para ativar as cartas
+        let partida = document.querySelector('section')
+
+        for (let index = 0; index < numeroCartas; index++) {
+
+
+            partida.innerHTML += minhasCartas[index]
+        }
+
+
         ativarCartas();
-
     }
 
-    // Deixar as cartas viradas até que sejam chamadas
-    let cartaVirada = false;
     let naoVirar = false;
+    let cartaVirada = false;
     let primeiraCarta, segundaCarta;
 
+    let intervalo = null;
+
     function ativarCartas() {
-        console.log("HABILITAR CARTAS CHAMADO")
-        const cartas = document.querySelectorAll('.dadosCarta');
+
+        const cartas = document.querySelectorAll('.cartasModelo');
         cartas.forEach(card => card.addEventListener('click', virarCarta));
 
-        // Embaralhar cartas 
-        cartas.forEach( cartas => {
-            cartas.getElementsByClassName.order = Math.floor(Math.random());
-        })
+        intervalo = setInterval(AtualizarCronometro, 1000)
 
-        if(naoVirar===true) return;
-        if(this === primeiraCarta) return;
-        
+        cartas.forEach(cartas => {
+            cartas.style.order = Math.floor(Math.random() * 12);
+        })
+    }
+
+ 
+    function virarCarta() {
+
+
+        if (naoVirar) return;
+
+        if (this === primeiraCarta) return;
+
         this.classList.add('virar');
-        if (cartaVirada === false) {
-            cartaVirada === true;
+
+        if (!cartaVirada) {
+
+            cartaVirada = true;
+
             primeiraCarta = this;
             return;
         }
+
+        segundaCarta = this;
+        VerificarCartasIguais();
     }
 
-    // Revisar aula de função como parêmetro
+    let totalJogadas = 0;
+
+    function VerificarCartasIguais() {
+
+        let igual = primeiraCarta.dataset.carta === segundaCarta.dataset.carta;
+
+        if (igual) {
+            contaCartas -= 2;
+            DesabilitarCartas();
+
+            setTimeout(() => {
+                VerificarFimDoJogo();
+            }, 1000);
+        }
+        else {
+            desvirarCarta();
+        }
+        totalJogadas++
+    }
+
+    function DesabilitarCartas() {
+
+        primeiraCarta.removeEventListener('click', virarCarta);
+        segundaCarta.removeEventListener('click', virarCarta);
+        ResetarCartas();
+    }
+
+    function ResetarCartas() {
+
+        [cartaVirada, naoVirar] = [false, false];
+        [primeiraCarta, segundaCarta] = [null, null];
+    }
+
+    function desvirarCarta() {
+
+        naoVirar = true;
+
+        setTimeout(() => {
+            primeiraCarta.classList.remove('virar');
+            segundaCarta.classList.remove('virar');
+            ResetarCartas();
+        }, 1000);
+
+    }
+
+    let tempoTotal = 0;
+
+    function VerificarFimDoJogo() {
+
+        if (contaCartas === 0) {
+
+            clearInterval(intervalo)
+
+            alert(`Você ganhou em ${totalJogadas} jogadas!`)
+            let resposta = prompt(`Fim do jogo ! Você terminou em ${tempoTotal} segundos ! Deseja jogar novamente ? digite [sim ou nao]`).toUpperCase();
+            let respondeu = false;
+
+            while (respondeu == false) {
+                if (resposta == 'SIM') {
+                    respondeu = true;
+                    return document.location.reload(true);
+                } else if (resposta == 'NAO') {
+                    return undefined
+                }
+                resposta = prompt(`Deseja jogar novamente ? responda [sim ou nao]`).toUpperCase();
+            }
+        }
+    }
+
+    function AtualizarCronometro() {
+        let cronometro = document.querySelector('.cronometro')
+        cronometro.innerHTML = parseInt(cronometro.innerHTML) + 1
+        tempoTotal++;
+    }
+
+
+
+
+    numeroCartas();
 
 }
-
