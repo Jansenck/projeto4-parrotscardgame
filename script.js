@@ -172,9 +172,6 @@ window.onload = () => {
         tempoTotal++;
     }
 
-
-
-
     numeroCartas();
 
 }
